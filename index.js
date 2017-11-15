@@ -1,41 +1,31 @@
 'use strict';
 const SocketioHandler = require('./lib/socket-io-handler');
+const SocketIO = require('socket.io');
 
 function TransomSocketIOInternal() {
     const args = {};
     const INVALID_TOKEN = "INVALID_TOKEN";
 
     this.initialize = function (server, options) {
-        // console.log('Initializing TransomSocket.io.internal');
         args.server = server;
         args.options = options || {};
     }
 
-    this.initializeWithServer = function (restifyApp) {
-        // console.log("Initializing internal socket server");
+    this.initializeWithServer = function (restifyServer, io) {
+        if (!io){
+            //no io server provided on the options, we'll create it here
+            io = SocketIO(restifyServer);
+        }
+        io.use(args.options.authMiddleware || this.nonceAuthMiddleware);
 
-        const msgClient = new SocketioHandler(restifyApp, args.options);
-        args.server.registry.set('messageClient', msgClient);
-
-        // console.log('Ready to accept socket connections ...');
-
-        msgClient.io.use(args.options.authMiddleware || this.nonceAuthMiddleware);
-
-        // msgClient.io.on('connect', function (socket) {
-        //     console.log('new connect on the internal');
-        // });
-        // msgClient.io.on('connection', function (socket) {
-        //     console.log('new connection on the internal socket server');
-        // });
-        // msgClient.io.on('disconnect', function () {
-        //     console.log('disconnected from server', arguments);
-        // });
+        const msgClient = new SocketioHandler(io, args.options);
+        args.server.registry.set('transomMessageClient', msgClient);
 
         return msgClient;
     }
 
     this.nonceAuthMiddleware = function (socket, next) {
-        const nonce = args.server.registry.get('nonce');
+        const nonce = args.server.registry.get(args.options.NonceHandler || 'transomNonce');
         nonce.verifyNonce(socket.handshake.query.token, function (err, payload) {
             if (err) {
                 setTimeout(function () {
