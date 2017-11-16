@@ -19,7 +19,7 @@ function TransomSocketIOInternal() {
         io.use(args.options.authMiddleware || this.nonceAuthMiddleware);
 
         const msgClient = new SocketioHandler(io, args.options);
-        args.server.registry.set('transomMessageClient', msgClient);
+        args.server.registry.set(args.options.registryKey || 'transomMessageClient', msgClient);
 
         return msgClient;
     }
