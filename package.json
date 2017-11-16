@@ -22,7 +22,8 @@
     "socket-io-mocks": "^0.1.5"
   },
   "scripts": {
-    "test": "cross-env DEBUG=transom:* NODE_ENV=test nyc mocha"
+    "test": "cross-env DEBUG=transom:* NODE_ENV=test nyc mocha",
+    "coveralls": "nyc report --reporter=text-lcov | coveralls"
   },
   "repository": {
     "type": "git",
