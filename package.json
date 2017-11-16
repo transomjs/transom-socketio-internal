@@ -23,7 +23,8 @@
   },
   "scripts": {
     "test": "cross-env DEBUG=transom:* NODE_ENV=test nyc mocha",
-    "coveralls": "nyc report --reporter=text-lcov | coveralls"
+    "coveralls": "nyc report --reporter=text-lcov | coveralls",
+    "releasepatch": "node release.js minor "
   },
   "repository": {
     "type": "git",
