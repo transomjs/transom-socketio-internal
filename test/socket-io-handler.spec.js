@@ -15,6 +15,17 @@ describe('SocketIOHandler', function (done) {
     let ioServer;
     let testSocket;
 
+    const mockNonceHandler = {
+        verifyNonce: function(token, callback){
+            if (token === 'good'){
+                callback(undefined, {_id: 'testUserId'})
+            }
+            if (token === 'bad'){
+                callback('Invalid Token');
+            }
+        }
+    }
+
     beforeEach(function setupMockIOServer() {
         //Creates a fresh Server class. The return value is equavalent to require('socket.io'). 
         const IOServer = MockIOServerFactory();
@@ -35,6 +46,7 @@ describe('SocketIOHandler', function (done) {
     beforeEach(function () {
 
         server.registry = new PocketRegistry();
+        server.registry.set('transomNonce', mockNonceHandler);
         const options = {};
         const restifyApp = {};
         TransomSocketIOInternal.initialize(server, options);
@@ -46,6 +58,41 @@ describe('SocketIOHandler', function (done) {
         expect(msgClient).to.be.an.instanceOf(Object);
         expect(msgClient.emitToUsers).to.be.an.instanceOf(Function);
         expect(msgClient.emitToEveryone).to.be.an.instanceOf(Function);
+        expect(msgClient.io).to.eql(ioServer);
+    });
+
+    it('disconnects and emits an error on invalid token', function(done){
+        expect(localMiddle).to.be.an.instanceOf(Function);
+        testSocket.handshake = {
+            query: {
+                token: 'bad'
+            }
+        };
+        testSocket.disconnect = function(val){
+            expect(val).to.be.true;
+            done();
+        }
+        localMiddle(testSocket, function(err){
+            expect(err.toString()).to.eql('Error: INVALID_TOKEN');
+        });
+    });
+
+    it('it populates the transomUser property with the Nonce payload', function(done){
+        expect(localMiddle).to.be.an.instanceOf(Function);
+        testSocket.handshake = {
+            query: {
+                token: 'good'
+            }
+        };
+        testSocket.disconnect = function(val){
+            expect('we should not').to.eql('be here');
+            done();
+        }
+        localMiddle(testSocket, function(err){
+            expect(err).to.be.undefined;
+            expect(testSocket.transomUser).to.eql( {_id: 'testUserId'});
+            done();
+        });
     });
 
     it('can emit a message to specific connected users', function () {
