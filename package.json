@@ -24,7 +24,7 @@
   "scripts": {
     "test": "cross-env DEBUG=transom:* NODE_ENV=test nyc mocha",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
-    "releasepatch": "node release.js patch "
+    "releasepatch": "node release.js patch"
   },
   "repository": {
     "type": "git",
