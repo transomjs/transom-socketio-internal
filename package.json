@@ -1,6 +1,6 @@
 {
   "name": "@transomjs/transom-socketio-internal",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Add async websocket messaging to a Transom server",
   "main": "index.js",
   "directories": {
