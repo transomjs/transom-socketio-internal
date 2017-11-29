@@ -1,0 +1,22 @@
+{
+    "tags": {
+        "allowUnknownTags": true
+    },
+    "source": {
+        "include":["index.js","./lib/socket-io-handler.js"],
+        "excludePattern": "(^|\\/|\\\\)_",
+        "exclude": [
+            "node_modules",
+            "plugins"
+        ]
+    },
+    "plugins": [
+    ],
+    "templates": {
+        "cleverLinks": true,
+        "monospaceLinks": false,
+        "default": {
+            "outputSourceFiles": true
+        }
+    }
+}
