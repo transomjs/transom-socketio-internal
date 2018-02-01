@@ -14,6 +14,10 @@ The transom-socket-io-internal plugin adds ansycronous communication to your ser
 use the same server process as transom-core. This is useful for small deployments where scaling is not
 a concern. It allows for a complete set of functionality that is easily deployed on a single docker 
 instance or droplet.
+
+Transom-socket-io-internal registers the 'transomMsgClient' with transom core. In your [server functions](server functions) you
+can ...code samples... 
+
 If scaling it required then another plugin will be needed to provide the same 'transomMsgClient' functions.
 
 ## Usage
