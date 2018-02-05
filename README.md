@@ -67,7 +67,7 @@ The plugin registers the message client with the server under the string literal
 transomMsgClient = {
     /*
     Send a json payload to a list of named users on a named channel
-    @param users: array of strings, containing usernames.
+    @param users: array of user objects that include the _id property. Alternatively, a single user object.
     @param channelName: string, predefined channel name that the users are listening on.
     @param data: Object, the JSON payload of the message
     */
