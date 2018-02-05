@@ -1,5 +1,5 @@
 # transom-socketio-internal
-Add a socket server to your Transom based REST API. Send messages to subscribed clients in real-time. This plugin is the 'internal' implementation of the asynchronous messaging. Out of process messaging, potentially backed by a queue can be provided by another plugin.
+Add a socket server to your Transom based REST API. Send messages to subscribed clients in real-time. This plugin is the 'internal' implementation of the asynchronous messaging. Out of process messaging, potentially backed by a queue, can be provided by another plugin.
 
 [![Build Status](https://travis-ci.org/transomjs/transom-socketio-internal.svg?branch=master)](https://travis-ci.org/transomjs/transom-socketio-internal)
 [![Coverage Status](https://coveralls.io/repos/github/transomjs/transom-socketio-internal/badge.svg?branch=master)](https://coveralls.io/github/transomjs/transom-socketio-internal?branch=master)
@@ -57,7 +57,8 @@ connection to the server using the token in their 'handshake' after which the so
 
 
 ## Sending messages
-The transom-socketio-internal plugin registers the 'transomMsgClient' with transom core. You may use this client in the `actions` of the mongoose entities (transom-mongoose) or in your [server functions](https://github.com/transomjs/transom-server-functions/blob/master/README.md) to send custom messages to all or subsets of connected users.
+The transom-socketio-internal plugin registers the 'transomMsgClient' with transom core. You may use this client where you have access to the transom server, 
+including in the `actions` of the mongoose entities (transom-mongoose) or in your [server functions](https://github.com/transomjs/transom-server-functions/blob/master/README.md) to send custom messages to all or subsets of connected users.
 
 ### The Transom Message Client
 The plugin registers the message client with the server under the string literal `transomMsgClient`. It has the following spec. Note that you can obtain a reference to the internal [socket io server](https://socket.io/docs/server-api/). As well, sending messages to known users requires [transom-mongoose-localuser](https://github.com/transomjs/transom-mongoose-localuser/blob/master/README.md)
