@@ -34,9 +34,11 @@ transom.configure(transomSocketIOInternal);
 var myApi = require('./myApi');
 
 // Initialize them all at once.
-var server = transom.initialize(myApi);
-
-transomSocketIOInternal.initializeWithServer(restifyApp);
+transom.initialize(myApi).then(function(server){
+   ...
+   
+   transomSocketIOInternal.initializeWithServer(restifyApp);
+});
 
 ```
 
