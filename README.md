@@ -37,7 +37,18 @@ var myApi = require('./myApi');
 transom.initialize(myApi).then(function(server){
    ...
    
-   transomSocketIOInternal.initializeWithServer(server);
+   	// ****************************************************************************
+	// Start the Transom server...
+	// ****************************************************************************
+	var restifyApp = server.listen(PORT_NUMBER, function () {
+		console.log('%s listening at %s', server.name, server.url);
+		console.log('browse to http://localhost:7070/html/sample.html');
+	});
+
+	// ****************************************************************************
+	// Start the Socket.IO server...
+	// ****************************************************************************
+	transomSocketIOInternal.initializeWithServer(restifyApp);
 });
 
 ```
