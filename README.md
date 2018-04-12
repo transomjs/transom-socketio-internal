@@ -101,3 +101,32 @@ transomMsgClient = {
 }
 ```
 
+### Configuring Nginx
+When using Nginx to proxy your requests, make sure you allow connection upgrades otherwise your websocket client will always fallback to polling.
+
+```bash
+$ more /etc/nginx/sites-available/my-test-api 
+# My-test API configuration
+#
+server {
+        # SSL configuration
+        listen 443 ssl; #IPv4
+        listen [::]:443 ssl; #IPv6
+
+        ssl on;
+        ssl_certificate /home/transomjs/ssl/transomjs.ca-chained.crt;
+        ssl_certificate_key /home/transomjs/ssl/transomjs.key;
+
+        server_name my-test-api.mydomain.com;
+
+        location / {
+                proxy_pass http://0.0.0.0:7075;
+
+	        # enables WS support
+	        proxy_http_version 1.1;
+	        proxy_set_header Upgrade $http_upgrade;
+	        proxy_set_header Connection "upgrade";
+        }
+}
+```
+
