@@ -4,10 +4,6 @@ const SocketIO = require('socket.io');
 
 /**
  * Module exports the TransomSocketIOInternal class
- * Usage:
- * 
- *
- * @param There are no parameters.
  */
 function TransomSocketIOInternal() {
     const args = {};
@@ -20,7 +16,7 @@ function TransomSocketIOInternal() {
 
     this.initializeWithServer = function (restifyServer, io) {
         if (!io){
-            //no io server provided on the options, we'll create it here
+            // No io server provided on the options, we'll create it here.
             io = SocketIO(restifyServer);
         }
         io.use(args.options.authMiddleware || this.nonceAuthMiddleware);

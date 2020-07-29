@@ -40,6 +40,7 @@ describe('SocketIOHandler', function (done) {
 
         ioServer.sockets = ioServer.sockets || {};
         ioServer.sockets.sockets = ioServer.sockets.sockets || [testSocket];
+        ioServer.sockets.sockets.forEach((s) => s.disconnect = sinon.spy()); // manually add disconnect().
         testSocket.transomUser = { _id: 'testUser' };
     });
 
@@ -56,6 +57,7 @@ describe('SocketIOHandler', function (done) {
     it('has been registered with the server', function () {
         const msgClient = server.registry.get('transomMessageClient');
         expect(msgClient).to.be.an.instanceOf(Object);
+        expect(msgClient.disconnectUsers).to.be.an.instanceOf(Function);
         expect(msgClient.emitToUsers).to.be.an.instanceOf(Function);
         expect(msgClient.emitToEveryone).to.be.an.instanceOf(Function);
         expect(msgClient.io).to.eql(ioServer);
@@ -101,6 +103,22 @@ describe('SocketIOHandler', function (done) {
         expect(testSocket.emit).to.be.an.instanceOf(Function);
         //console.log('args', testSocket.emit.getCall(0).args);
         expect(testSocket.emit.calledWith('testChannel', { foo: 'bar' })).to.be.true;
+    });
+
+    it('can disconnect and close connections for specific users', function () {
+        const msgClient = server.registry.get('transomMessageClient');
+        msgClient.disconnectUsers([{ _id: 'testUser' }], true);
+        expect(testSocket.emit).to.be.an.instanceOf(Function);
+        expect(testSocket.disconnect).to.be.an.instanceOf(Function);
+        expect(testSocket.disconnect.calledWith(true)).to.be.true;
+    });
+
+    it('can disconnect specific users', function () {
+        const msgClient = server.registry.get('transomMessageClient');
+        msgClient.disconnectUsers([{ _id: 'testUser' }], false);
+        expect(testSocket.emit).to.be.an.instanceOf(Function);
+        expect(testSocket.disconnect).to.be.an.instanceOf(Function);
+        expect(testSocket.disconnect.calledWith(false)).to.be.true;
     });
 
     it('can emit a message to all connected users', function () {
